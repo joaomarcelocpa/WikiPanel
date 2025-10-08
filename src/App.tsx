@@ -1,35 +1,56 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from 'react';
+import Navbar from './components/Navbar';
+import Header from './components/Header';
+import DuvidasGerais from './components/DuvidasGerais';
+import Blacklist from './components/Blacklist';
+import Campanhas from './components/Campanhas';
+import Relatorios from './components/Relatorios';
+import FAQ from './components/FAQ';
+import Contatos from './components/Contatos';
 
 function App() {
-  const [count, setCount] = useState(0)
+    const [darkMode, setDarkMode] = useState(false);
+    const [activeTab, setActiveTab] = useState('duvidas');
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    const userName = "João Marcelo";
+
+    const renderContent = () => {
+        switch(activeTab) {
+            case 'duvidas':
+                return <DuvidasGerais darkMode={darkMode} />;
+            case 'blacklist':
+                return <Blacklist darkMode={darkMode} />;
+            case 'campanhas':
+                return <Campanhas darkMode={darkMode} />;
+            case 'relatorios':
+                return <Relatorios darkMode={darkMode} />;
+            case 'faq':
+                return <FAQ darkMode={darkMode} />;
+            case 'contatos':
+                return <Contatos darkMode={darkMode} />;
+            default:
+                return <DuvidasGerais darkMode={darkMode} />;
+        }
+    };
+
+    return (
+        <div className={`min-h-screen transition-colors duration-300 ${
+            darkMode ? 'bg-[#0f0f0f]' : 'bg-gray-50'
+        }`}>
+            <Navbar
+                darkMode={darkMode}
+                setDarkMode={setDarkMode}
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
+                userName={userName}
+            />
+
+            <main className="max-w-[1400px] mx-auto px-8 py-12">
+                <Header userName={userName} darkMode={darkMode} />
+                {renderContent()}
+            </main>
+        </div>
+    );
 }
 
-export default App
+export default App;
