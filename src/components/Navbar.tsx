@@ -10,12 +10,12 @@ interface NavbarProps {
 
 const Navbar = ({ darkMode, setDarkMode, activeTab, setActiveTab, userName }: NavbarProps) => {
     const tabs = [
-        { id: 'duvidas', label: 'Dúvidas Gerais' },
-        { id: 'campanhas', label: 'Campanhas' },
+        { id: 'questions', label: 'Dúvidas Gerais' },
+        { id: 'campaigns', label: 'Campanhas' },
         { id: 'blacklist', label: 'Blacklist' },
-        { id: 'empresas', label: 'Empresas' },
+        { id: 'companies', label: 'Empresas' },
         { id: 'api', label: 'API Externa' },
-        { id: 'financeiro', label: 'Financial' },
+        { id: 'financial', label: 'Financial' },
         { id: 'faq', label: 'FAQ' }
     ];
 

@@ -47,37 +47,37 @@ export const mockDuvidas: Duvida[] = [
     // CAMPANHAS
     {
         id: 7,
-        type: 'campanhas',
+        type: 'campaigns',
         pergunta: "Como criar uma nova campanha de SMS?",
         resposta: "Para criar uma campanha: 1) Acesse o menu 'Campanhas' e clique em 'Nova Campanha'. 2) Defina um nome para sua campanha. 3) Selecione os destinatários (contatos individuais, grupos ou importação de lista). 4) Configure sua mensagem usando variáveis dinâmicas como {nome}, {codigo}, etc. 5) Escolha entre envio imediato ou agendado. 6) Revise e confirme o envio."
     },
     {
         id: 8,
-        type: 'campanhas',
+        type: 'campaigns',
         pergunta: "Como usar templates de mensagens?",
         resposta: "Templates permitem reutilizar mensagens frequentes. Para criar: vá em 'Campanhas' > 'Templates' > 'Novo Template'. Dê um nome, escreva sua mensagem e salve. Use variáveis como {nome}, {codigo}, {data} para personalização. Para usar um template, selecione-o ao criar uma campanha e as variáveis serão substituídas automaticamente pelos dados dos contatos."
     },
     {
         id: 9,
-        type: 'campanhas',
+        type: 'campaigns',
         pergunta: "Como funciona o agendamento de campanhas?",
         resposta: "Você pode agendar campanhas para envio futuro com até 30 dias de antecedência. Ao criar a campanha, selecione 'Agendar envio' e escolha data e horário. É possível configurar campanhas recorrentes (diárias, semanais, mensais). O sistema ajusta automaticamente para o timezone de cada destinatário se configurado."
     },
     {
         id: 10,
-        type: 'campanhas',
+        type: 'campaigns',
         pergunta: "O que são variáveis dinâmicas e como usá-las?",
         resposta: "Variáveis dinâmicas personalizam mensagens automaticamente. Use {nome} para o nome do contato, {codigo} para códigos promocionais, {data} para datas, {empresa} para nome da empresa, etc. Exemplo: 'Olá {nome}, seu código é {codigo}'. Ao enviar, cada destinatário recebe a mensagem com seus dados específicos."
     },
     {
         id: 11,
-        type: 'campanhas',
+        type: 'campaigns',
         pergunta: "Como segmentar contatos para uma campanha?",
         resposta: "Use filtros avançados para segmentar: região, estado, cidade, comportamento de compra, histórico de interação, tags personalizadas, ou qualquer campo customizado. Você pode criar segmentos dinâmicos que se atualizam automaticamente conforme novos contatos atendem aos critérios definidos."
     },
     {
         id: 12,
-        type: 'campanhas',
+        type: 'campaigns',
         pergunta: "Posso testar uma campanha antes do envio em massa?",
         resposta: "Sim! Recomendamos sempre fazer um teste. Use a opção 'Enviar Teste' antes de confirmar a campanha. Você pode enviar para até 5 números de teste para verificar formatação, variáveis e conteúdo. Isso evita erros em envios grandes."
     },
@@ -85,37 +85,37 @@ export const mockDuvidas: Duvida[] = [
     // EMPRESAS
     {
         id: 13,
-        type: 'empresas',
+        type: 'companies',
         pergunta: "Como criar uma nova empresa no sistema?",
         resposta: "Para criar uma empresa: 1) Acesse 'Configurações' > 'Empresas' > 'Nova Empresa'. 2) Preencha os dados: Nome, CNPJ, telefone e email. 3) Configure o remetente padrão para SMS. 4) Defina permissões e limites de envio. 5) Salve e a empresa estará pronta para uso. Você pode criar múltiplas empresas para gerenciar diferentes clientes ou unidades de negócio."
     },
     {
         id: 14,
-        type: 'empresas',
+        type: 'companies',
         pergunta: "O que são empresas filhas e como funcionam?",
         resposta: "Empresas filhas são sub-contas vinculadas à sua empresa principal (matriz). Elas têm acesso limitado aos recursos conforme você definir. Útil para agências que gerenciam múltiplos clientes, franquias ou empresas com várias filiais. Cada empresa filha tem: seus próprios contatos, campanhas, blacklist (ou compartilhada), créditos separados e usuários específicos."
     },
     {
         id: 15,
-        type: 'empresas',
+        type: 'companies',
         pergunta: "Como gerenciar permissões de empresas filhas?",
         resposta: "Ao criar ou editar uma empresa filha, você define: limite de créditos, acesso a funcionalidades (campanhas, relatórios, API), permissão para criar usuários, acesso ao financeiro, e se pode visualizar dados de outras empresas. A matriz sempre tem controle total sobre todas as filhas."
     },
     {
         id: 16,
-        type: 'empresas',
+        type: 'companies',
         pergunta: "Posso transferir créditos entre empresas?",
         resposta: "Sim! A empresa matriz pode redistribuir créditos entre empresas filhas. Acesse 'Empresas' > selecione a empresa > 'Gerenciar Créditos'. Informe a quantidade a transferir. Isso permite controle centralizado do orçamento. Empresas filhas não podem transferir créditos entre si, apenas receber da matriz."
     },
     {
         id: 17,
-        type: 'empresas',
+        type: 'companies',
         pergunta: "Como alternar entre diferentes empresas?",
         resposta: "Use o seletor de empresas no canto superior direito da tela (ícone de empresa ao lado do seu nome). Selecione a empresa desejada e todo o dashboard será atualizado para exibir dados e funcionalidades específicas daquela empresa. Usuários com acesso a múltiplas empresas podem alternar livremente."
     },
     {
         id: 18,
-        type: 'empresas',
+        type: 'companies',
         pergunta: "Posso ter usuários específicos para cada empresa?",
         resposta: "Sim! Cada empresa pode ter seus próprios usuários com permissões específicas. Em 'Empresas' > 'Usuários', adicione novos usuários definindo: nome, email, senha, nível de acesso (admin, operador, apenas visualização) e recursos permitidos. Um mesmo usuário pode ter acesso a múltiplas empresas com diferentes níveis de permissão."
     },
@@ -161,37 +161,37 @@ export const mockDuvidas: Duvida[] = [
     // FINANCEIRO
     {
         id: 25,
-        type: 'financeiro',
+        type: 'financial',
         pergunta: "Como comprar créditos para envio de SMS?",
         resposta: "Para comprar créditos: 1) Acesse 'Financeiro' > 'Comprar Créditos'. 2) Escolha um pacote ou insira valor customizado. 3) Selecione forma de pagamento (cartão, boleto, PIX). 4) Confirme a compra. Créditos via PIX e cartão são liberados instantaneamente. Boleto leva até 2 dias úteis para compensação. Você receberá nota fiscal por email."
     },
     {
         id: 26,
-        type: 'financeiro',
+        type: 'financial',
         pergunta: "Quais são as formas de pagamento aceitas?",
         resposta: "Aceitamos: Cartão de crédito (Visa, Master, Elo, Amex) em até 12x, Boleto bancário à vista, PIX (aprovação instantânea), e Transferência bancária (para valores acima de R$ 10.000). Para empresas Enterprise, oferecemos faturamento mensal com pagamento em até 30 dias."
     },
     {
         id: 27,
-        type: 'financeiro',
+        type: 'financial',
         pergunta: "Como funciona o sistema de créditos?",
         resposta: "Cada SMS enviado consome créditos do seu saldo. O custo varia por operadora e tamanho da mensagem: mensagens até 160 caracteres = 1 crédito, 161-306 caracteres = 2 créditos, 307-459 caracteres = 3 créditos, etc. SMS internacionais têm custo diferenciado. Você pode consultar preços detalhados em 'Financeiro' > 'Tabela de Preços'."
     },
     {
         id: 28,
-        type: 'financeiro',
+        type: 'financial',
         pergunta: "Os créditos têm prazo de validade?",
         resposta: "Créditos pré-pagos não expiram! Permanecem na sua conta indefinidamente. Apenas créditos bônus promocionais podem ter prazo de validade específico, que será informado no momento da promoção. Você pode consultar validade de bônus em 'Financeiro' > 'Meus Créditos'."
     },
     {
         id: 29,
-        type: 'financeiro',
+        type: 'financial',
         pergunta: "Como visualizar meu histórico de transações?",
         resposta: "Acesse 'Financeiro' > 'Transações'. Lá você verá todas as compras, consumos e ajustes de crédito com: data, tipo (compra/consumo), quantidade, valor, forma de pagamento e saldo resultante. Filtre por período, tipo de transação e exporte relatórios em PDF ou Excel."
     },
     {
         id: 30,
-        type: 'financeiro',
+        type: 'financial',
         pergunta: "Como emitir segunda via de nota fiscal?",
         resposta: "Vá em 'Financeiro' > 'Notas Fiscais', localize a transação desejada e clique em 'Baixar NF'. Notas fiscais são emitidas automaticamente para todas as compras. Se houver erro nos dados cadastrais, atualize em 'Configurações' > 'Dados da Empresa' e solicite reemissão via suporte."
     },

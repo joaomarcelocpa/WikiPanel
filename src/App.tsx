@@ -17,14 +17,14 @@ function App() {
                 return <GeneralQuestions darkMode={darkMode} />;
             case 'blacklist':
                 return <InfoPage darkMode={darkMode} type="blacklist" />;
-            case 'campanhas':
-                return <InfoPage darkMode={darkMode} type="campanhas" />;
-            case 'empresas':
-                return <InfoPage darkMode={darkMode} type="empresas" />;
+            case 'campaigns':
+                return <InfoPage darkMode={darkMode} type="campaigns" />;
+            case 'companies':
+                return <InfoPage darkMode={darkMode} type="companies" />;
             case 'api':
                 return <InfoPage darkMode={darkMode} type="api" />;
-            case 'financeiro':
-                return <InfoPage darkMode={darkMode} type="financeiro" />;
+            case 'financial':
+                return <InfoPage darkMode={darkMode} type="financial" />;
             case 'faq':
                 return <InfoPage darkMode={darkMode} type="faq" />;
             default:
