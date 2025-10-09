@@ -1,12 +1,9 @@
 import { useState } from 'react';
 import Navbar from './components/Navbar';
 import Header from './components/Header';
-import DuvidasGerais from './components/DuvidasGerais';
-import Blacklist from './components/Blacklist';
-import Campanhas from './components/Campanhas';
-import Relatorios from './components/Relatorios';
-import FAQ from './components/FAQ';
-import Contatos from './components/Contatos';
+import Footer from './components/Footer';
+import GeneralQuestions from './components/GeneralQuestions';
+import InfoPage from './components/InfoPage';
 
 function App() {
     const [darkMode, setDarkMode] = useState(false);
@@ -17,19 +14,21 @@ function App() {
     const renderContent = () => {
         switch(activeTab) {
             case 'duvidas':
-                return <DuvidasGerais darkMode={darkMode} />;
+                return <GeneralQuestions darkMode={darkMode} />;
             case 'blacklist':
-                return <Blacklist darkMode={darkMode} />;
+                return <InfoPage darkMode={darkMode} type="blacklist" />;
             case 'campanhas':
-                return <Campanhas darkMode={darkMode} />;
-            case 'relatorios':
-                return <Relatorios darkMode={darkMode} />;
+                return <InfoPage darkMode={darkMode} type="campanhas" />;
+            case 'empresas':
+                return <InfoPage darkMode={darkMode} type="empresas" />;
+            case 'api':
+                return <InfoPage darkMode={darkMode} type="api" />;
+            case 'financeiro':
+                return <InfoPage darkMode={darkMode} type="financeiro" />;
             case 'faq':
-                return <FAQ darkMode={darkMode} />;
-            case 'contatos':
-                return <Contatos darkMode={darkMode} />;
+                return <InfoPage darkMode={darkMode} type="faq" />;
             default:
-                return <DuvidasGerais darkMode={darkMode} />;
+                return <GeneralQuestions darkMode={darkMode} />;
         }
     };
 
@@ -49,6 +48,8 @@ function App() {
                 <Header userName={userName} darkMode={darkMode} />
                 {renderContent()}
             </main>
+
+            <Footer darkMode={darkMode} />
         </div>
     );
 }

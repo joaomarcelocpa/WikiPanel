@@ -11,11 +11,12 @@ interface NavbarProps {
 const Navbar = ({ darkMode, setDarkMode, activeTab, setActiveTab, userName }: NavbarProps) => {
     const tabs = [
         { id: 'duvidas', label: 'Dúvidas Gerais' },
-        { id: 'blacklist', label: 'Blacklist' },
         { id: 'campanhas', label: 'Campanhas' },
-        { id: 'relatorios', label: 'Relatórios' },
-        { id: 'faq', label: 'FAQ' },
-        { id: 'contatos', label: 'Contatos' }
+        { id: 'blacklist', label: 'Blacklist' },
+        { id: 'empresas', label: 'Empresas' },
+        { id: 'api', label: 'API Externa' },
+        { id: 'financeiro', label: 'Financial' },
+        { id: 'faq', label: 'FAQ' }
     ];
 
     return (
@@ -80,12 +81,12 @@ const Navbar = ({ darkMode, setDarkMode, activeTab, setActiveTab, userName }: Na
                         <div className={`hidden md:flex items-center px-3 py-2 rounded-lg ${
                             darkMode ? 'bg-gray-800' : 'bg-gray-50'
                         }`}>
-                            <div className="w-8 h-8 rounded-full bg-mid-data flex items-center justify-center text-white text-sm font-semibold mr-2">
+                            <div className="w-8 h-8 rounded-full bg-[#3fbec5] flex items-center justify-center text-white text-sm font-semibold mr-2">
                                 {userName.charAt(0)}
                             </div>
                             <span className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                {userName.split(' ')[0]}
-              </span>
+                                {userName.split(' ')[0]}
+                            </span>
                         </div>
                     </div>
                 </div>

@@ -5,7 +5,7 @@ interface DuvidasGeraisProps {
     darkMode: boolean;
 }
 
-const DuvidasGerais = ({ darkMode }: DuvidasGeraisProps) => {
+const GeneralQuestions = ({ darkMode }: DuvidasGeraisProps) => {
     const [expandedCard, setExpandedCard] = useState<number | null>(null);
 
     const duvidas = [
@@ -161,4 +161,4 @@ const DuvidasGerais = ({ darkMode }: DuvidasGeraisProps) => {
     );
 };
 
-export default DuvidasGerais;
+export default GeneralQuestions;
