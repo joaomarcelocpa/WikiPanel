@@ -8,7 +8,7 @@ interface InfoPageProps {
     type: string;
 }
 
-const InfoPage = ({ darkMode, type }: InfoPageProps) => {
+const InfoTabs = ({ darkMode, type }: InfoPageProps) => {
     const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
 
     const duvidas = mockDuvidas.filter((duvida: Duvida) => duvida.type === type);
@@ -61,4 +61,4 @@ const InfoPage = ({ darkMode, type }: InfoPageProps) => {
     );
 };
 
-export default InfoPage;
+export default InfoTabs;

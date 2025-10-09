@@ -3,7 +3,7 @@ import Navbar from './components/Navbar';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import GeneralQuestions from './components/GeneralQuestions';
-import InfoPage from './components/InfoPage';
+import InfoTabs from './components/InfoTabs.tsx';
 
 function App() {
     const [darkMode, setDarkMode] = useState(false);
@@ -16,17 +16,17 @@ function App() {
             case 'duvidas':
                 return <GeneralQuestions darkMode={darkMode} />;
             case 'blacklist':
-                return <InfoPage darkMode={darkMode} type="blacklist" />;
+                return <InfoTabs darkMode={darkMode} type="blacklist" />;
             case 'campaigns':
-                return <InfoPage darkMode={darkMode} type="campaigns" />;
+                return <InfoTabs darkMode={darkMode} type="campaigns" />;
             case 'companies':
-                return <InfoPage darkMode={darkMode} type="companies" />;
+                return <InfoTabs darkMode={darkMode} type="companies" />;
             case 'api':
-                return <InfoPage darkMode={darkMode} type="api" />;
+                return <InfoTabs darkMode={darkMode} type="api" />;
             case 'financial':
-                return <InfoPage darkMode={darkMode} type="financial" />;
+                return <InfoTabs darkMode={darkMode} type="financial" />;
             case 'faq':
-                return <InfoPage darkMode={darkMode} type="faq" />;
+                return <InfoTabs darkMode={darkMode} type="faq" />;
             default:
                 return <GeneralQuestions darkMode={darkMode} />;
         }
