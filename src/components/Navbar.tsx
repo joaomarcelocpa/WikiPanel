@@ -72,7 +72,7 @@ const Navbar = ({ darkMode, setDarkMode, activeTab, setActiveTab, userName }: Na
                         <button
                             onClick={() => setDarkMode(!darkMode)}
                             className={`p-2 rounded-lg transition-colors ${
-                                darkMode ? 'bg-gray-800 text-yellow-400' : 'bg-gray-100 text-gray-600'
+                                darkMode ? 'bg-gray-800 text-white' : 'bg-gray-100 text-gray-600'
                             }`}
                         >
                             {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
