@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { HelpCircle, ChevronDown } from 'lucide-react';
-import { mockDuvidas } from '../mocks/mockData';
-import type { Duvida } from '../mocks/mockData';
+import { mockDuvidas } from '../mocks/mockData.ts';
+import type { Duvida } from '../mocks/mockData.ts';
 
 interface InfoPageProps {
     darkMode: boolean;

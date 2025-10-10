@@ -6,10 +6,10 @@ interface FooterProps {
 
 const Footer = ({ darkMode }: FooterProps) => {
     return (
-        <footer className={`border-t mt-20 ${
+        <footer className={`border-t mt-20 ml-64 ${
             darkMode ? 'bg-[#1a1a1a] border-gray-800' : 'bg-white border-gray-100'
         }`} style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
-            <div className="max-w-[1400px] mx-auto px-8 py-12">
+            <div className="max-w-[1200px] mx-auto px-8 py-12">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                     <div>
                         <h3 className={`text-lg font-bold mb-4 ${darkMode ? 'text-white' : 'text-[#155457]'}`}
