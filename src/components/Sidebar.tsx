@@ -1,224 +1,123 @@
 import { Sun, Moon, ChevronRight, ChevronDown } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import type { CategoryResponse, SubCategoryResponse, InformationViewResponse } from '../shared/interfaces/information.interface';
+import { getAllCategories, getSubCategoriesByCategory, getInformationBySubCategory } from '../shared/services/information.service';
 
 interface SidebarProps {
     darkMode: boolean;
     setDarkMode: (value: boolean) => void;
-    activeTab: string;
-    setActiveTab: (tab: string) => void;
-    activeSubtopic?: string;
-    setActiveSubtopic?: (subtopic: string) => void;
+    activeCategory: string;
+    setActiveCategory: (category: string) => void;
+    activeSubCategory: string;
+    setActiveSubCategory: (subCategory: string) => void;
+    activeInformation: string;
+    setActiveInformation: (information: string) => void;
     userName: string;
 }
 
-interface SubTopic {
-    id: string;
-    label: string;
-}
+const Sidebar = ({
+                     darkMode,
+                     setDarkMode,
+                     activeCategory,
+                     setActiveCategory,
+                     setActiveSubCategory,
+                     activeInformation,
+                     setActiveInformation,
+                     userName
+                 }: SidebarProps) => {
+    const [categories, setCategories] = useState<CategoryResponse[]>([]);
+    const [subCategories, setSubCategories] = useState<{ [key: string]: SubCategoryResponse[] }>({});
+    const [informations, setInformations] = useState<{ [key: string]: InformationViewResponse[] }>({});
+    const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
+    const [expandedSubCategories, setExpandedSubCategories] = useState<string[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
-interface Topic {
-    id: string;
-    label: string;
-    subtopics?: SubTopic[];
-}
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                setLoading(true);
+                setError(null);
+                const data = await getAllCategories();
 
-interface Section {
-    id: string;
-    label: string;
-    topics: Topic[];
-}
+                if (!Array.isArray(data)) {
+                    setError('Formato de dados inválido');
+                    return;
+                }
 
-const Sidebar = ({ darkMode, setDarkMode, activeTab, setActiveTab, activeSubtopic, setActiveSubtopic, userName }: SidebarProps) => {
-    const [expandedSections, setExpandedSections] = useState<string[]>(['sms']);
-    const [expandedTopics, setExpandedTopics] = useState<string[]>([]);
+                setCategories(data);
 
-    const sections: Section[] = [
-        {
-            id: 'general',
-            label: 'Dúvidas Gerais',
-            topics: [
-                { id: 'duvidas', label: 'Dúvidas Gerais' }
-            ]
-        },
-        {
-            id: 'sms',
-            label: 'SMS',
-            topics: [
-                {
-                    id: 'campaigns',
-                    label: 'Campanhas',
-                    subtopics: [
-                        { id: 'criar-campanha', label: 'Como criar uma nova campanha?' },
-                        { id: 'templates', label: 'Como usar templates?' },
-                        { id: 'agendamento', label: 'Agendamento de campanhas' }
-                    ]
-                },
-                {
-                    id: 'blacklist',
-                    label: 'Blacklist',
-                    subtopics: [
-                        { id: 'o-que-e', label: 'O que é a Blacklist?' },
-                        { id: 'adicao-automatica', label: 'Adição automática' },
-                        { id: 'importar', label: 'Importar lista em massa' }
-                    ]
-                },
-                {
-                    id: 'financial',
-                    label: 'Financeiro',
-                    subtopics: [
-                        { id: 'comprar', label: 'Como comprar créditos?' },
-                        { id: 'pagamento', label: 'Formas de pagamento' },
-                        { id: 'sistema-creditos', label: 'Sistema de créditos' }
-                    ]
-                },
-                {
-                    id: 'companies',
-                    label: 'Empresas',
-                    subtopics: [
-                        { id: 'criar', label: 'Como criar uma empresa?' },
-                        { id: 'empresas-filhas', label: 'Empresas filhas' },
-                        { id: 'permissoes', label: 'Gerenciar permissões' }
-                    ]
-                },
-                {
-                    id: 'services',
-                    label: 'Serviços',
-                    subtopics: [
-                        { id: 'o-que-sao', label: 'O que são serviços?' },
-                        { id: 'escolher-servico', label: 'Escolher o melhor serviço' },
-                        { id: 'remetentes', label: 'Configurar remetentes' }
-                    ]
-                },
-                {
-                    id: 'reports',
-                    label: 'Relatórios',
-                    subtopics: [
-                        { id: 'disponiveis', label: 'Relatórios disponíveis' },
-                        { id: 'gerar', label: 'Gerar relatório de envios' },
-                        { id: 'agendar', label: 'Agendar relatórios automáticos' }
-                    ]
-                },
-                {
-                    id: 'api',
-                    label: 'API Externa',
-                    subtopics: [
-                        { id: 'credenciais', label: 'Obter credenciais' },
-                        { id: 'url-base', label: 'URL base da API' },
-                        { id: 'enviar-sms', label: 'Enviar SMS via API' }
-                    ]
-                },
-                { id: 'faq', label: 'FAQ' }
-            ]
-        },
-        {
-            id: 'backoffice',
-            label: 'Backoffice',
-            topics: [
-                {
-                    id: 'operational',
-                    label: 'Operacional',
-                    subtopics: [
-                        { id: 'gerenciar', label: 'Gerenciar operações diárias' },
-                        { id: 'problemas-envio', label: 'Resolver problemas de envio' },
-                        { id: 'alertas', label: 'Configurar alertas' }
-                    ]
-                },
-                {
-                    id: 'backoffice-financial',
-                    label: 'Financeiro',
-                    subtopics: [
-                        { id: 'faturamento', label: 'Gerenciar faturamento' },
-                        { id: 'precos', label: 'Configurar preços' },
-                        { id: 'reembolsos', label: 'Processar reembolsos' }
-                    ]
-                },
-                {
-                    id: 'backoffice-companies',
-                    label: 'Empresas',
-                    subtopics: [
-                        { id: 'criar-configurar', label: 'Criar e configurar empresas' },
-                        { id: 'usuarios', label: 'Gerenciar usuários' },
-                        { id: 'migrar-planos', label: 'Migrar entre planos' }
-                    ]
-                },
-                {
-                    id: 'suppliers',
-                    label: 'Fornecedores',
-                    subtopics: [
-                        { id: 'cadastrar', label: 'Cadastrar fornecedor' },
-                        { id: 'contas', label: 'Gerenciar contas' },
-                        { id: 'sids', label: 'Gerenciar SIDs' }
-                    ]
-                },
-                {
-                    id: 'messaging',
-                    label: 'Mensageria',
-                    subtopics: [
-                        { id: 'gateways', label: 'Configurar gateways' },
-                        { id: 'servicos', label: 'Gerenciar serviços' },
-                        { id: 'paineis', label: 'Configurar painéis' },
-                        { id: 'numeros-procon', label: 'Gerenciar números Procon' }
-                    ]
-                },
-                {
-                    id: 'monitoring',
-                    label: 'Monitoramento',
-                    subtopics: [
-                        { id: 'fake-dlr', label: 'Histórico Fake DLR' },
-                        { id: 'servicos', label: 'Histórico de serviços' },
-                        { id: 'gateways', label: 'Histórico de gateways' },
-                        { id: 'empresas', label: 'Histórico de empresas' },
-                        { id: 'usuarios', label: 'Histórico de usuários' },
-                        { id: 'sms-pdus', label: 'Histórico SMS PDUs' },
-                        { id: 'clicks', label: 'Histórico de clicks' }
-                    ]
-                },
-                {
-                    id: 'backoffice-users',
-                    label: 'Usuários Backoffice',
-                    subtopics: [
-                        { id: 'criar', label: 'Criar usuários' },
-                        { id: 'permissoes', label: 'Gerenciar permissões' },
-                        { id: 'senhas', label: 'Gerar e resetar senhas' }
-                    ]
-                },
-                { id: 'backoffice-faq', label: 'FAQ' }
-            ]
-        }
-    ];
-
-    const toggleSection = (sectionId: string) => {
-        if (expandedSections.includes(sectionId)) {
-            setExpandedSections(expandedSections.filter(id => id !== sectionId));
-        } else {
-            setExpandedSections([...expandedSections, sectionId]);
-        }
-    };
-
-    const toggleTopic = (topicId: string) => {
-        if (expandedTopics.includes(topicId)) {
-            setExpandedTopics(expandedTopics.filter(id => id !== topicId));
-        } else {
-            setExpandedTopics([...expandedTopics, topicId]);
-        }
-    };
-
-    const handleTopicClick = (topicId: string, hasSubtopics: boolean) => {
-        if (hasSubtopics) {
-            toggleTopic(topicId);
-        } else {
-            setActiveTab(topicId);
-            if (setActiveSubtopic) {
-                setActiveSubtopic('');
+                if (data.length > 0) {
+                    const firstCategory = data[0];
+                    setExpandedCategories([firstCategory.identifier]);
+                    loadSubCategories(firstCategory.identifier);
+                }
+            } catch (error) {
+                setError(error instanceof Error ? error.message : 'Erro desconhecido');
+            } finally {
+                setLoading(false);
             }
+        };
+
+        fetchCategories();
+    }, []);
+
+    const loadSubCategories = async (categoryIdentifier: string) => {
+        if (subCategories[categoryIdentifier]) return;
+
+        try {
+            const data = await getSubCategoriesByCategory(categoryIdentifier);
+
+            setSubCategories(prev => ({
+                ...prev,
+                [categoryIdentifier]: data
+            }));
+        } catch (error) {
+            console.error('❌ Erro ao carregar subcategorias:', error);
         }
     };
 
-    const handleSubtopicClick = (topicId: string, subtopicId: string) => {
-        setActiveTab(topicId);
-        if (setActiveSubtopic) {
-            setActiveSubtopic(subtopicId);
+    const loadInformations = async (subCategoryIdentifier: string) => {
+        if (informations[subCategoryIdentifier]) return;
+
+        try {
+            const data = await getInformationBySubCategory(subCategoryIdentifier);
+
+            setInformations(prev => ({
+                ...prev,
+                [subCategoryIdentifier]: data
+            }));
+        } catch (error) {
+            console.error('❌ Erro ao carregar informações:', error);
         }
+    };
+
+    const toggleCategory = async (categoryIdentifier: string) => {
+        const isExpanded = expandedCategories.includes(categoryIdentifier);
+
+        if (isExpanded) {
+            setExpandedCategories(expandedCategories.filter(id => id !== categoryIdentifier));
+        } else {
+            setExpandedCategories([...expandedCategories, categoryIdentifier]);
+            await loadSubCategories(categoryIdentifier);
+        }
+    };
+
+    const toggleSubCategory = async (subCategoryIdentifier: string) => {
+        const isExpanded = expandedSubCategories.includes(subCategoryIdentifier);
+
+        if (isExpanded) {
+            setExpandedSubCategories(expandedSubCategories.filter(id => id !== subCategoryIdentifier));
+        } else {
+            setExpandedSubCategories([...expandedSubCategories, subCategoryIdentifier]);
+            await loadInformations(subCategoryIdentifier);
+        }
+    };
+
+    const handleInformationClick = (categoryId: string, subCategoryId: string, informationId: string) => {
+        setActiveCategory(categoryId);
+        setActiveSubCategory(subCategoryId);
+        setActiveInformation(informationId);
     };
 
     return (
@@ -245,79 +144,139 @@ const Sidebar = ({ darkMode, setDarkMode, activeTab, setActiveTab, activeSubtopi
 
                 {/* Navigation */}
                 <nav className="space-y-2">
-                    {sections.map((section) => {
-                        const isSectionExpanded = expandedSections.includes(section.id);
-                        const isGeneralSection = section.id === 'general';
+                    {/* Loading State */}
+                    {loading && (
+                        <div className={`text-center py-4 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                            <p className="text-xs">Carregando...</p>
+                        </div>
+                    )}
+
+                    {/* Error State */}
+                    {error && !loading && (
+                        <div className="text-center py-4">
+                            <p className="text-xs text-red-500">{error}</p>
+                        </div>
+                    )}
+
+                    {/* Categorias */}
+                    {!loading && !error && categories.map((category) => {
+                        const isCategoryExpanded = expandedCategories.includes(category.identifier);
+                        const categorySubCategories = subCategories[category.identifier] || [];
+
+                        const normalizedName = category.name
+                            .toLowerCase()
+                            .normalize('NFD')
+                            .replace(/[\u0300-\u036f]/g, '')
+                            .trim();
+                        const isGeneralCategory = normalizedName === 'duvidas gerais' ||
+                            category.name.toLowerCase().trim() === 'dúvidas gerais';
+
+                        if (isGeneralCategory) {
+                            const isActive = activeCategory === category.identifier;
+
+                            return (
+                                <button
+                                    key={category.identifier}
+                                    onClick={() => {
+                                        setActiveCategory(category.identifier);
+                                        setActiveSubCategory('');
+                                        setActiveInformation('');
+                                    }}
+                                    className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-left transition-all ${
+                                        isActive
+                                            ? 'bg-[#3fbec5] text-white font-semibold'
+                                            : darkMode
+                                                ? 'text-gray-300 hover:bg-gray-800 hover:text-white'
+                                                : 'text-gray-700 hover:bg-gray-50'
+                                    }`}
+                                >
+                                    <span className="text-sm font-bold">{category.name}</span>
+                                </button>
+                            );
+                        }
 
                         return (
-                            <div key={section.id}>
-                                {/* Section Header */}
-                                {!isGeneralSection && (
-                                    <button
-                                        onClick={() => toggleSection(section.id)}
-                                        className={`w-full flex items-center justify-between px-2 py-2 text-left font-bold text-sm ${
-                                            darkMode ? 'text-white' : 'text-[#155457]'
+                            <div key={category.identifier}>
+                                {/* Category Header */}
+                                <button
+                                    onClick={() => toggleCategory(category.identifier)}
+                                    className={`w-full flex items-center justify-between px-2 py-2 text-left font-bold text-sm ${
+                                        darkMode ? 'text-white' : 'text-[#155457]'
+                                    }`}
+                                >
+                                    <span className="text-sm font-bold">{category.name}</span>
+                                    <ChevronDown
+                                        className={`w-4 h-4 transition-transform ${
+                                            isCategoryExpanded ? 'rotate-0' : '-rotate-90'
                                         }`}
-                                    >
-                                        <span>{section.label}</span>
-                                        <ChevronDown
-                                            className={`w-4 h-4 transition-transform ${
-                                                isSectionExpanded ? 'rotate-0' : '-rotate-90'
-                                            }`}
-                                        />
-                                    </button>
-                                )}
+                                    />
+                                </button>
 
-                                {/* Topics */}
-                                {(isGeneralSection || isSectionExpanded) && (
-                                    <div className={`space-y-1 ${!isGeneralSection ? 'ml-2' : ''}`}>
-                                        {section.topics.map((topic) => {
-                                            const hasSubtopics = Boolean(topic.subtopics && topic.subtopics.length > 0);
-                                            const isTopicExpanded = expandedTopics.includes(topic.id);
-                                            const isActive = activeTab === topic.id && !hasSubtopics;
+                                {/* Subcategories */}
+                                {isCategoryExpanded && (
+                                    <div className="ml-2 space-y-1">
+                                        {categorySubCategories.length === 0 && (
+                                            <div className={`px-3 py-2 text-xs ${
+                                                darkMode ? 'text-gray-500' : 'text-gray-400'
+                                            }`}>
+                                                Carregando subcategorias...
+                                            </div>
+                                        )}
+
+                                        {categorySubCategories.map((subCategory) => {
+                                            const isSubCategoryExpanded = expandedSubCategories.includes(subCategory.identifier);
+                                            const subCategoryInformations = informations[subCategory.identifier] || [];
 
                                             return (
-                                                <div key={topic.id}>
+                                                <div key={subCategory.identifier}>
+                                                    {/* SubCategory Header */}
                                                     <button
-                                                        onClick={() => handleTopicClick(topic.id, hasSubtopics)}
+                                                        onClick={() => toggleSubCategory(subCategory.identifier)}
                                                         className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-left transition-all ${
-                                                            isActive
-                                                                ? 'bg-[#3fbec5] text-white font-semibold'
-                                                                : darkMode
-                                                                    ? 'text-gray-300 hover:bg-gray-800 hover:text-white'
-                                                                    : 'text-gray-700 hover:bg-gray-50'
+                                                            darkMode
+                                                                ? 'text-gray-300 hover:bg-gray-800 hover:text-white'
+                                                                : 'text-gray-700 hover:bg-gray-50'
                                                         }`}
                                                     >
-                                                        <span className="text-sm">{topic.label}</span>
-                                                        {hasSubtopics && (
-                                                            <ChevronRight
-                                                                className={`w-4 h-4 transition-transform ${
-                                                                    isTopicExpanded ? 'rotate-90' : ''
-                                                                }`}
-                                                            />
-                                                        )}
+                                                        <span className="text-sm">{subCategory.name}</span>
+                                                        <ChevronRight
+                                                            className={`w-4 h-4 transition-transform ${
+                                                                isSubCategoryExpanded ? 'rotate-90' : ''
+                                                            }`}
+                                                        />
                                                     </button>
 
-                                                    {/* Subtopics */}
-                                                    {hasSubtopics && isTopicExpanded && topic.subtopics && (
+                                                    {/* Informações (Perguntas) */}
+                                                    {isSubCategoryExpanded && (
                                                         <div className="ml-4 mt-1 space-y-1 border-l-2 border-gray-700 pl-2">
-                                                            {topic.subtopics.map((subtopic) => {
-                                                                const isSubtopicActive =
-                                                                    activeTab === topic.id && activeSubtopic === subtopic.id;
+                                                            {subCategoryInformations.length === 0 && (
+                                                                <div className={`px-3 py-1.5 text-xs ${
+                                                                    darkMode ? 'text-gray-500' : 'text-gray-400'
+                                                                }`}>
+                                                                    Carregando...
+                                                                </div>
+                                                            )}
+
+                                                            {subCategoryInformations.map((info) => {
+                                                                const isActive = activeInformation === info.identifier;
 
                                                                 return (
                                                                     <button
-                                                                        key={subtopic.id}
-                                                                        onClick={() => handleSubtopicClick(topic.id, subtopic.id)}
+                                                                        key={info.identifier}
+                                                                        onClick={() => handleInformationClick(
+                                                                            category.identifier,
+                                                                            subCategory.identifier,
+                                                                            info.identifier
+                                                                        )}
                                                                         className={`w-full text-left px-3 py-1.5 rounded text-xs transition-all ${
-                                                                            isSubtopicActive
+                                                                            isActive
                                                                                 ? 'bg-[#3fbec5] text-white font-semibold'
                                                                                 : darkMode
                                                                                     ? 'text-gray-400 hover:text-white hover:bg-gray-800'
                                                                                     : 'text-gray-600 hover:bg-gray-50'
                                                                         }`}
                                                                     >
-                                                                        {subtopic.label}
+                                                                        {info.question}
                                                                     </button>
                                                                 );
                                                             })}
@@ -331,6 +290,12 @@ const Sidebar = ({ darkMode, setDarkMode, activeTab, setActiveTab, activeSubtopi
                             </div>
                         );
                     })}
+
+                    {!loading && categories.length === 0 && (
+                        <div className={`text-center py-8 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                            <p className="text-xs">Nenhuma categoria disponível</p>
+                        </div>
+                    )}
                 </nav>
             </div>
 
