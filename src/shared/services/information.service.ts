@@ -1,30 +1,16 @@
-// Arquivo: src/shared/services/information.service.ts
-
 import type {
     InformationViewResponse,
     CategoryResponse,
     SubCategoryResponse,
 } from '../interfaces/information.interface';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+const API_URL = import.meta.env.VITE_API_URL;
 
-// Headers para requisições públicas (sem autenticação)
 function getPublicHeaders(): HeadersInit {
     return {
         'Content-Type': 'application/json',
     };
 }
-
-// // Headers para requisições autenticadas (caso necessário)
-// function getAuthHeaders(): HeadersInit {
-//     const token = localStorage.getItem('token');
-//     return {
-//         'Content-Type': 'application/json',
-//         ...(token && { Authorization: `Bearer ${token}` }),
-//     };
-// }
-
-// ===== CATEGORIAS =====
 
 export async function getAllCategories(): Promise<CategoryResponse[]> {
     try {
@@ -107,8 +93,6 @@ export async function getSubCategoriesByCategory(
         );
     }
 }
-
-// ===== INFORMAÇÕES =====
 
 export async function getAllInformation(): Promise<InformationViewResponse[]> {
     try {
