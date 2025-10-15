@@ -99,10 +99,9 @@ const TopicContent = ({ darkMode, informationIdentifier }: TopicContentProps) =>
                 darkMode ? 'bg-[#1f1f1f] border-gray-800' : 'bg-white border-gray-100'
             }`}>
                 <div
-                    className={`text-lg leading-relaxed whitespace-pre-wrap ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}
-                >
-                    {information.content}
-                </div>
+                    className={`content-display text-lg leading-relaxed ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}
+                    dangerouslySetInnerHTML={{ __html: information.content }}
+                />
 
                 {/* File Attachment */}
                 {information.file && (
