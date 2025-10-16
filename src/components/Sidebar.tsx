@@ -193,6 +193,8 @@ const Sidebar = ({
                                         setActiveCategory(category.identifier);
                                         setActiveSubCategory('');
                                         setActiveInformation('');
+                                        // Navega para rota específica de Dúvidas Gerais
+                                        navigate('/general-questions');
                                     }}
                                     className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-left transition-all ${
                                         isActive

@@ -1,74 +1,63 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, useParams, useNavigate, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useParams, useNavigate } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import GeneralQuestions from './components/GeneralQuestions';
 import TopicContent from './components/TopicContent';
-import { getCategoryByIdentifier } from './shared/services/information.service';
+import { getCategoryByIdentifier, getAllCategories } from './shared/services/information.service';
 
-// Componente para rota com slug
 function TopicPage({ darkMode }: { darkMode: boolean }) {
     const params = useParams();
-    const slug = params['*']; // Captura tudo da URL
+    const slug = params['*'];
 
     return <TopicContent darkMode={darkMode} slug={slug || ''} />;
 }
 
-// Componente Home
-function HomePage({
-                      darkMode,
-                      activeCategory,
-                      categoryName
-                  }: {
-    darkMode: boolean;
-    activeCategory: string;
-    categoryName: string;
-}) {
-    if (!activeCategory) {
-        return (
-            <div className={`text-center py-20 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                <h2 className={`text-2xl font-bold mb-4 ${darkMode ? 'text-white' : 'text-[#155457]'}`}>
-                    Bem-vindo à Central de Ajuda
-                </h2>
-                <p>Selecione uma categoria no menu lateral para começar.</p>
-            </div>
-        );
-    }
+function HomePage() {
+    const navigate = useNavigate();
 
-    const normalizedName = categoryName
-        .toLowerCase()
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
-        .trim();
-    const isGeneralCategory = normalizedName === 'duvidas gerais' ||
-        categoryName.toLowerCase().trim() === 'dúvidas gerais';
+    useEffect(() => {
+        navigate('/general-questions');
+    }, [navigate]);
 
-    if (isGeneralCategory) {
-        return <GeneralQuestions darkMode={darkMode} categoryIdentifier={activeCategory} />;
-    }
-
-    return (
-        <div className={`text-center py-20 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-            <h2 className={`text-2xl font-bold mb-4 ${darkMode ? 'text-white' : 'text-[#155457]'}`}>
-                {categoryName}
-            </h2>
-            <p>Selecione um tópico no menu lateral para visualizar o conteúdo.</p>
-        </div>
-    );
+    return null;
 }
 
-// Componente principal
 function AppContent() {
     const [darkMode, setDarkMode] = useState(false);
     const [activeCategory, setActiveCategory] = useState('');
     const [activeSubCategory, setActiveSubCategory] = useState('');
     const [activeInformation, setActiveInformation] = useState('');
-    const [categoryName, setCategoryName] = useState('');
+    const [, setCategoryName] = useState('');
     const navigate = useNavigate();
-    const location = useLocation();
 
     const userName = "João Marcelo";
+
+    useEffect(() => {
+        const loadDefaultCategory = async () => {
+            try {
+                const categories = await getAllCategories();
+                const generalCategory = categories.find(cat => {
+                    const normalized = cat.name
+                        .toLowerCase()
+                        .normalize('NFD')
+                        .replace(/[\u0300-\u036f]/g, '')
+                        .trim();
+                    return normalized === 'duvidas gerais' || cat.name.toLowerCase().trim() === 'dúvidas gerais';
+                });
+
+                if (generalCategory && !activeCategory) {
+                    setActiveCategory(generalCategory.identifier);
+                    setCategoryName(generalCategory.name);
+                }
+            } catch (error) {
+                console.error('Erro ao carregar categoria padrão:', error);
+            }
+        };
+
+        loadDefaultCategory();
+    }, []);
 
     useEffect(() => {
         const fetchCategoryName = async () => {
@@ -80,16 +69,11 @@ function AppContent() {
                     console.error('Erro ao buscar categoria:', error);
                     setCategoryName('');
                 }
-            } else {
-                setCategoryName('');
             }
         };
 
         fetchCategoryName();
     }, [activeCategory]);
-
-    // Verifica se está na home
-    const isHome = location.pathname === '/';
 
     return (
         <div className={`flex flex-col min-h-screen transition-colors duration-300 ${
@@ -113,17 +97,32 @@ function AppContent() {
                     <Header userName={userName} darkMode={darkMode} />
 
                     <Routes>
+                        {/* Rota principal - Redireciona para General Questions */}
                         <Route
                             path="/"
+                            element={<HomePage />}
+                        />
+
+                        {/* Rota específica para Dúvidas Gerais */}
+                        <Route
+                            path="/general-questions"
                             element={
-                                <HomePage
-                                    darkMode={darkMode}
-                                    activeCategory={activeCategory}
-                                    categoryName={categoryName}
-                                />
+                                activeCategory ? (
+                                    <GeneralQuestions
+                                        darkMode={darkMode}
+                                        categoryIdentifier={activeCategory}
+                                    />
+                                ) : (
+                                    <div className={`text-center py-20 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                                        <div className="animate-pulse">
+                                            <div className={`h-8 w-64 mx-auto mb-4 rounded ${darkMode ? 'bg-gray-800' : 'bg-gray-200'}`}></div>
+                                            <div className={`h-4 w-48 mx-auto rounded ${darkMode ? 'bg-gray-800' : 'bg-gray-200'}`}></div>
+                                        </div>
+                                    </div>
+                                )
                             }
                         />
-                        {/* Rota catch-all para slugs */}
+
                         <Route
                             path="*"
                             element={<TopicPage darkMode={darkMode} />}
