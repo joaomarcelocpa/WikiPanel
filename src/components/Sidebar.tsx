@@ -2,6 +2,7 @@ import { Sun, Moon, ChevronRight, ChevronDown } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import type { CategoryResponse, SubCategoryResponse, InformationViewResponse } from '../shared/interfaces/information.interface';
 import { getAllCategories, getSubCategoriesByCategory, getInformationBySubCategory } from '../shared/services/information.service';
+import {useNavigate} from "react-router-dom";
 
 interface SidebarProps {
     darkMode: boolean;
@@ -13,6 +14,7 @@ interface SidebarProps {
     activeInformation: string;
     setActiveInformation: (information: string) => void;
     userName: string;
+    navigate: (path: string) => void;
 }
 
 const Sidebar = ({
@@ -32,6 +34,7 @@ const Sidebar = ({
     const [expandedSubCategories, setExpandedSubCategories] = useState<string[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -114,10 +117,19 @@ const Sidebar = ({
         }
     };
 
-    const handleInformationClick = (categoryId: string, subCategoryId: string, informationId: string) => {
+    const handleInformationClick = (
+        categoryId: string,
+        subCategoryId: string,
+        information: InformationViewResponse
+    ) => {
         setActiveCategory(categoryId);
         setActiveSubCategory(subCategoryId);
-        setActiveInformation(informationId);
+        setActiveInformation(information.identifier);
+
+        // Navega para a rota com slug
+        if (information.slug) {
+            navigate(`/${information.slug}`);
+        }
     };
 
     return (
@@ -266,7 +278,7 @@ const Sidebar = ({
                                                                         onClick={() => handleInformationClick(
                                                                             category.identifier,
                                                                             subCategory.identifier,
-                                                                            info.identifier
+                                                                            info
                                                                         )}
                                                                         className={`w-full text-left px-3 py-1.5 rounded text-xs transition-all ${
                                                                             isActive

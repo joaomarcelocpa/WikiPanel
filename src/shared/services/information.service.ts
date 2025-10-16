@@ -189,3 +189,26 @@ export async function getInformationById(
         );
     }
 }
+
+export async function getInformationBySlug(
+    slug: string
+): Promise<InformationViewResponse> {
+    try {
+        const response = await fetch(`${API_URL}/information/slug/${slug}`, {
+            method: 'GET',
+            headers: getPublicHeaders(),
+        });
+
+        if (!response.ok) {
+            throw new Error('Informação não encontrada');
+        }
+
+        return await response.json();
+    } catch (error: unknown) {
+        throw new Error(
+            error instanceof Error
+                ? error.message
+                : 'Erro na conexão com o servidor'
+        );
+    }
+}
