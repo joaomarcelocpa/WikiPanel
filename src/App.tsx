@@ -72,7 +72,7 @@ function App() {
     };
 
     return (
-        <div className={`min-h-screen transition-colors duration-300 ${
+        <div className={`flex flex-col min-h-screen transition-colors duration-300 ${
             darkMode ? 'bg-[#0f0f0f]' : 'bg-gray-50'
         }`}>
             <Sidebar
@@ -87,7 +87,7 @@ function App() {
                 userName={userName}
             />
 
-            <main className="ml-64 px-8 py-12">
+            <main className="flex-1 ml-64 px-8 py-12">
                 <div className="max-w-[1200px] mx-auto">
                     <Header userName={userName} darkMode={darkMode} />
                     {renderContent()}
