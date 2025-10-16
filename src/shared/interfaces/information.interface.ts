@@ -23,6 +23,7 @@ export interface InformationViewResponse {
     identifier: string;
     question: string;
     content: string;
+    slug: string;
     file?: FileResponse;
     file_identifier?: number;
     category_identifier: string;

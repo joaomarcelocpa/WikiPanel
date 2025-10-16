@@ -1,20 +1,26 @@
 import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import type { InformationViewResponse } from '../shared/interfaces/information.interface';
-import { getInformationById } from '../shared/services/information.service';
+import { getInformationBySlug } from '../shared/services/information.service';
 
 interface TopicContentProps {
     darkMode: boolean;
-    informationIdentifier: string;
+    slug?: string;
 }
 
-const TopicContent = ({ darkMode, informationIdentifier }: TopicContentProps) => {
+const TopicContent = ({ darkMode, slug: slugProp }: TopicContentProps) => {
+    const params = useParams();
+    const slugFromUrl = params['*']; // Captura tudo da URL
+
+    const slug = slugProp || slugFromUrl;
+
     const [information, setInformation] = useState<InformationViewResponse | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchInformation = async () => {
-            if (!informationIdentifier) {
+            if (!slug) {
                 setInformation(null);
                 setLoading(false);
                 return;
@@ -23,7 +29,8 @@ const TopicContent = ({ darkMode, informationIdentifier }: TopicContentProps) =>
             try {
                 setLoading(true);
                 setError(null);
-                const data = await getInformationById(informationIdentifier);
+
+                const data = await getInformationBySlug(slug);
                 setInformation(data);
             } catch (err) {
                 setError(err instanceof Error ? err.message : 'Erro ao carregar informação');
@@ -34,7 +41,7 @@ const TopicContent = ({ darkMode, informationIdentifier }: TopicContentProps) =>
         };
 
         fetchInformation();
-    }, [informationIdentifier]);
+    }, [slug]);
 
     if (loading) {
         return (
@@ -56,7 +63,7 @@ const TopicContent = ({ darkMode, informationIdentifier }: TopicContentProps) =>
         );
     }
 
-    if (!informationIdentifier) {
+    if (!slug) {
         return (
             <div className={`text-center py-20 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 <h2 className={`text-2xl font-bold mb-4 ${darkMode ? 'text-white' : 'text-[#155457]'}`}>
@@ -99,10 +106,9 @@ const TopicContent = ({ darkMode, informationIdentifier }: TopicContentProps) =>
                 darkMode ? 'bg-[#1f1f1f] border-gray-800' : 'bg-white border-gray-100'
             }`}>
                 <div
-                    className={`text-lg leading-relaxed whitespace-pre-wrap ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}
-                >
-                    {information.content}
-                </div>
+                    className={`content-display text-lg leading-relaxed ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}
+                    dangerouslySetInnerHTML={{ __html: information.content }}
+                />
 
                 {/* File Attachment */}
                 {information.file && (
@@ -115,37 +121,37 @@ const TopicContent = ({ darkMode, informationIdentifier }: TopicContentProps) =>
                             Arquivo Anexo
                         </h3>
                         <a
-                            href={information.file.path}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
-                                darkMode
-                                    ? 'bg-gray-800 hover:bg-gray-700 text-[#6ed3d8]'
-                                    : 'bg-gray-50 hover:bg-gray-100 text-[#155457]'
-                            }`}
+                        href={information.file.path}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
+                        darkMode
+                            ? 'bg-gray-800 hover:bg-gray-700 text-[#6ed3d8]'
+                            : 'bg-gray-50 hover:bg-gray-100 text-[#155457]'
+                    }`}
                         >
-                            <svg
-                                className="w-5 h-5"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                                />
-                            </svg>
-                            <span className="font-medium">{information.file.originalName}</span>
-                            <span className={`text-xs ${
-                                darkMode ? 'text-gray-500' : 'text-gray-400'
-                            }`}>
+                        <svg
+                            className="w-5 h-5"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                            />
+                        </svg>
+                        <span className="font-medium">{information.file.originalName}</span>
+                        <span className={`text-xs ${
+                            darkMode ? 'text-gray-500' : 'text-gray-400'
+                        }`}>
                                 ({(information.file.size / 1024).toFixed(2)} KB)
                             </span>
-                        </a>
+                    </a>
                     </div>
-                )}
+                    )}
             </div>
         </div>
     );

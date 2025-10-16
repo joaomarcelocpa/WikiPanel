@@ -1,5 +1,3 @@
-// Arquivo: src/shared/services/information.service.ts
-
 import type {
     InformationViewResponse,
     CategoryResponse,
@@ -8,23 +6,11 @@ import type {
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
-// Headers para requisições públicas (sem autenticação)
 function getPublicHeaders(): HeadersInit {
     return {
         'Content-Type': 'application/json',
     };
 }
-
-// // Headers para requisições autenticadas (caso necessário)
-// function getAuthHeaders(): HeadersInit {
-//     const token = localStorage.getItem('token');
-//     return {
-//         'Content-Type': 'application/json',
-//         ...(token && { Authorization: `Bearer ${token}` }),
-//     };
-// }
-
-// ===== CATEGORIAS =====
 
 export async function getAllCategories(): Promise<CategoryResponse[]> {
     try {
@@ -108,8 +94,6 @@ export async function getSubCategoriesByCategory(
     }
 }
 
-// ===== INFORMAÇÕES =====
-
 export async function getAllInformation(): Promise<InformationViewResponse[]> {
     try {
         const response = await fetch(`${API_URL}/information`, {
@@ -188,6 +172,29 @@ export async function getInformationById(
 ): Promise<InformationViewResponse> {
     try {
         const response = await fetch(`${API_URL}/information/${identifier}`, {
+            method: 'GET',
+            headers: getPublicHeaders(),
+        });
+
+        if (!response.ok) {
+            throw new Error('Informação não encontrada');
+        }
+
+        return await response.json();
+    } catch (error: unknown) {
+        throw new Error(
+            error instanceof Error
+                ? error.message
+                : 'Erro na conexão com o servidor'
+        );
+    }
+}
+
+export async function getInformationBySlug(
+    slug: string
+): Promise<InformationViewResponse> {
+    try {
+        const response = await fetch(`${API_URL}/information/slug/${slug}`, {
             method: 'GET',
             headers: getPublicHeaders(),
         });

@@ -38,6 +38,14 @@ const GeneralQuestions = ({ darkMode, categoryIdentifier }: GeneralQuestionsProp
         fetchInformation();
     }, [categoryIdentifier]);
 
+    // Função para extrair texto do HTML para preview
+    const getTextPreview = (html: string, maxLength: number = 150): string => {
+        const div = document.createElement('div');
+        div.innerHTML = html;
+        const text = div.textContent || div.innerText || '';
+        return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
+    };
+
     if (loading) {
         return (
             <div className="flex items-center justify-center py-20">
@@ -132,13 +140,20 @@ const GeneralQuestions = ({ darkMode, categoryIdentifier }: GeneralQuestionsProp
                             {item.question}
                         </h3>
 
-                        <p
-                            className={`text-sm mb-4 leading-relaxed ${
-                                isExpanded ? 'text-white/90' : darkMode ? 'text-gray-400' : 'text-gray-600'
-                            } ${isExpanded ? '' : 'line-clamp-3'}`}
-                        >
-                            {item.content}
-                        </p>
+                        {isExpanded ? (
+                            <div
+                                className={`text-sm mb-4 leading-relaxed text-white/90`}
+                                dangerouslySetInnerHTML={{ __html: item.content }}
+                            />
+                        ) : (
+                            <p
+                                className={`text-sm mb-4 leading-relaxed line-clamp-3 ${
+                                    darkMode ? 'text-gray-400' : 'text-gray-600'
+                                }`}
+                            >
+                                {getTextPreview(item.content)}
+                            </p>
+                        )}
 
                         {isExpanded && (
                             <div className="mt-4 pt-4 border-t border-white/20">
@@ -153,7 +168,7 @@ const GeneralQuestions = ({ darkMode, categoryIdentifier }: GeneralQuestionsProp
                                             day: '2-digit',
                                             month: '2-digit',
                                             year: 'numeric',
-                                            })}
+                                        })}
                                     </span>
                                 </div>
                             </div>
