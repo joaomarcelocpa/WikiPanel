@@ -1,14 +1,13 @@
 import { useState, useEffect } from 'react';
 import { MessageSquare, ChevronRight } from 'lucide-react';
 import type { InformationViewResponse } from '../shared/interfaces/information.interface';
-import { getInformationByCategory } from '../shared/services/information.service';
+import { getAllInformation } from '../shared/services/information.service';
 
 interface GeneralQuestionsProps {
     darkMode: boolean;
-    categoryIdentifier: string;
 }
 
-const GeneralQuestions = ({ darkMode, categoryIdentifier }: GeneralQuestionsProps) => {
+const GeneralQuestions = ({ darkMode }: GeneralQuestionsProps) => {
     const [expandedCard, setExpandedCard] = useState<number | null>(null);
     const [information, setInformation] = useState<InformationViewResponse[]>([]);
     const [loading, setLoading] = useState(true);
@@ -16,16 +15,10 @@ const GeneralQuestions = ({ darkMode, categoryIdentifier }: GeneralQuestionsProp
 
     useEffect(() => {
         const fetchInformation = async () => {
-            if (!categoryIdentifier) {
-                setInformation([]);
-                setLoading(false);
-                return;
-            }
-
             try {
                 setLoading(true);
                 setError(null);
-                const data = await getInformationByCategory(categoryIdentifier);
+                const data = await getAllInformation();
                 setInformation(data);
             } catch (err) {
                 setError(err instanceof Error ? err.message : 'Erro ao carregar informações');
@@ -36,7 +29,7 @@ const GeneralQuestions = ({ darkMode, categoryIdentifier }: GeneralQuestionsProp
         };
 
         fetchInformation();
-    }, [categoryIdentifier]);
+    }, []);
 
     // Função para extrair texto do HTML para preview
     const getTextPreview = (html: string, maxLength: number = 150): string => {

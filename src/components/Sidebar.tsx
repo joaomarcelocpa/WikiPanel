@@ -1,8 +1,13 @@
-import { Sun, Moon, ChevronRight, ChevronDown } from 'lucide-react';
+import { Sun, Moon, ChevronRight, ChevronDown, LogOut, Home, ShieldCheck } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import type { CategoryResponse, SubCategoryResponse, InformationViewResponse } from '../shared/interfaces/information.interface';
-import { getAllCategories, getSubCategoriesByCategory, getInformationBySubCategory } from '../shared/services/information.service';
-import {useNavigate} from "react-router-dom";
+import type { CategoryResponse } from '../shared/interfaces/category.interface';
+import type { SubCategoryResponse } from '../shared/interfaces/subcategory.interface';
+import type { InformationViewResponse } from '../shared/interfaces/information.interface';
+import { getAllCategories } from '../shared/services/category.service';
+import { getSubCategoriesByCategory } from '../shared/services/subcategory.service';
+import { getInformationBySubCategory } from '../shared/services/information.service';
+import { useNavigate } from "react-router-dom";
+import { useAuth } from '../shared/contexts/AuthContext';
 
 interface SidebarProps {
     darkMode: boolean;
@@ -15,6 +20,7 @@ interface SidebarProps {
     setActiveInformation: (information: string) => void;
     userName: string;
     navigate: (path: string) => void;
+    onLogout: () => void;
 }
 
 const Sidebar = ({
@@ -25,7 +31,8 @@ const Sidebar = ({
                      setActiveSubCategory,
                      activeInformation,
                      setActiveInformation,
-                     userName
+                     userName,
+                     onLogout,
                  }: SidebarProps) => {
     const [categories, setCategories] = useState<CategoryResponse[]>([]);
     const [subCategories, setSubCategories] = useState<{ [key: string]: SubCategoryResponse[] }>({});
@@ -35,6 +42,8 @@ const Sidebar = ({
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
+    const { user } = useAuth();
+    const isMaster = user?.type === 'MASTER';
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -153,6 +162,32 @@ const Sidebar = ({
                         {darkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
                     </button>
                 </div>
+
+                {/* Home Button */}
+                <button
+                    onClick={() => navigate('/general-questions')}
+                    className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-left text-sm font-semibold transition-colors ${
+                        darkMode
+                            ? 'text-gray-300 hover:bg-gray-800 hover:text-white'
+                            : 'text-gray-700 hover:bg-gray-50'
+                    }`}
+                >
+                    <Home className="w-4 h-4" />
+                    Início
+                </button>
+
+                {/* Master-only Admin Button */}
+                {isMaster && (
+                    <button
+                        onClick={() => navigate('/admin')}
+                        className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-left text-sm font-semibold transition-colors mt-1 mb-4 text-[#3fbec5] hover:bg-[#3fbec5]/10"
+                    >
+                        <ShieldCheck className="w-4 h-4" />
+                        Painel Master
+                    </button>
+                )}
+
+                {!isMaster && <div className="mb-4" />}
 
                 {/* Navigation */}
                 <nav className="space-y-2">
@@ -333,6 +368,17 @@ const Sidebar = ({
                             {userName}
                         </p>
                     </div>
+                    <button
+                        onClick={onLogout}
+                        title="Sair"
+                        className={`ml-2 p-1.5 rounded-lg transition-colors ${
+                            darkMode
+                                ? 'text-gray-400 hover:text-red-400 hover:bg-gray-700'
+                                : 'text-gray-400 hover:text-red-500 hover:bg-gray-200'
+                        }`}
+                    >
+                        <LogOut className="w-4 h-4" />
+                    </button>
                 </div>
             </div>
         </aside>

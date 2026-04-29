@@ -1,3 +1,6 @@
+import type { CategorySummary } from './category.interface';
+import type { SubCategorySummary } from './subcategory.interface';
+
 export interface FileResponse {
     id: number;
     originalName: string;
@@ -6,17 +9,6 @@ export interface FileResponse {
     mimetype: string;
     size: number;
     uploaded_at: Date;
-}
-
-export interface CategorySummary {
-    identifier: string;
-    name: string;
-}
-
-export interface SubCategorySummary {
-    identifier: string;
-    name: string;
-    category_identifier: string;
 }
 
 export interface InformationViewResponse {
@@ -32,25 +24,8 @@ export interface InformationViewResponse {
     subCategory: SubCategorySummary;
     user_identifier: string;
     user_name: string;
-    created_at: Date;
-    updated_at: Date;
-}
-
-export interface CategoryResponse {
-    identifier: string;
-    name: string;
-    description?: string;
-    created_at: Date;
-    updated_at: Date;
-}
-
-export interface SubCategoryResponse {
-    identifier: string;
-    name: string;
-    description?: string;
-    category_identifier: string;
-    created_at: Date;
-    updated_at: Date;
+    created_at: string;
+    updated_at: string;
 }
 
 export interface InformationCreateDto {
