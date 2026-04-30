@@ -31,3 +31,29 @@ export async function createSubCategory(data: {
         throw new Error(error instanceof Error ? error.message : 'Erro na conexão com o servidor');
     }
 }
+
+export async function updateSubCategory(categoryIdentifier: string, subIdentifier: string, data: { name: string }): Promise<SubCategoryResponse> {
+    try {
+        const response = await apiFetch(`${API_URL}/category/${categoryIdentifier}/subcategory/${subIdentifier}`, {
+            method: 'PUT',
+            headers: getAuthHeaders(),
+            body: JSON.stringify(data),
+        });
+        if (!response.ok) throw new Error('Erro ao atualizar subcategoria');
+        return await response.json();
+    } catch (error: unknown) {
+        throw new Error(error instanceof Error ? error.message : 'Erro na conexão com o servidor');
+    }
+}
+
+export async function deleteSubCategory(categoryIdentifier: string, subIdentifier: string): Promise<void> {
+    try {
+        const response = await apiFetch(`${API_URL}/category/${categoryIdentifier}/subcategory/${subIdentifier}`, {
+            method: 'DELETE',
+            headers: getAuthHeaders(),
+        });
+        if (!response.ok) throw new Error('Erro ao apagar subcategoria');
+    } catch (error: unknown) {
+        throw new Error(error instanceof Error ? error.message : 'Erro na conexão com o servidor');
+    }
+}

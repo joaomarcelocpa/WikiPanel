@@ -39,7 +39,7 @@ export async function updateUser(
 ): Promise<UserResponse> {
     try {
         const response = await apiFetch(`${API_URL}/users/${id}`, {
-            method: 'PATCH',
+            method: 'PUT',
             headers: getAuthHeaders(),
             body: JSON.stringify(data),
         });
