@@ -112,46 +112,50 @@ const TopicContent = ({ darkMode, slug: slugProp }: TopicContentProps) => {
 
                 {/* File Attachment */}
                 {information.file && (
-                    <div className={`mt-6 pt-6 border-t ${
-                        darkMode ? 'border-gray-700' : 'border-gray-200'
-                    }`}>
-                        <h3 className={`text-sm font-semibold mb-3 ${
-                            darkMode ? 'text-gray-400' : 'text-gray-600'
-                        }`}>
-                            Arquivo Anexo
-                        </h3>
-                        <a
-                        href={information.file.path}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
-                        darkMode
-                            ? 'bg-gray-800 hover:bg-gray-700 text-[#6ed3d8]'
-                            : 'bg-gray-50 hover:bg-gray-100 text-[#155457]'
-                    }`}
-                        >
-                        <svg
-                            className="w-5 h-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                            />
-                        </svg>
-                        <span className="font-medium">{information.file.originalName}</span>
-                        <span className={`text-xs ${
-                            darkMode ? 'text-gray-500' : 'text-gray-400'
-                        }`}>
-                                ({(information.file.size / 1024).toFixed(2)} KB)
-                            </span>
-                    </a>
+                    <div className={`mt-6 pt-6 border-t ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}>
+                        {information.file.mimetype.startsWith('image/') ? (
+                            <div>
+                                <h3 className={`text-sm font-semibold mb-3 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                                    Imagem
+                                </h3>
+                                <img
+                                    src={information.file.path}
+                                    alt={information.file.originalName}
+                                    loading="lazy"
+                                    className={`max-w-full rounded-xl border ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}
+                                />
+                                <a
+                                    href={information.file.path}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className={`inline-flex items-center gap-1 mt-2 text-xs transition-colors ${darkMode ? 'text-gray-500 hover:text-[#6ed3d8]' : 'text-gray-400 hover:text-[#155457]'}`}
+                                >
+                                    Ver em tamanho original ↗
+                                </a>
+                            </div>
+                        ) : (
+                            <>
+                                <h3 className={`text-sm font-semibold mb-3 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                                    Arquivo Anexo
+                                </h3>
+                                <a
+                                    href={information.file.path}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${darkMode ? 'bg-gray-800 hover:bg-gray-700 text-[#6ed3d8]' : 'bg-gray-50 hover:bg-gray-100 text-[#155457]'}`}
+                                >
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                    </svg>
+                                    <span className="font-medium">{information.file.originalName}</span>
+                                    <span className={`text-xs ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+                                        ({(information.file.size / 1024).toFixed(2)} KB)
+                                    </span>
+                                </a>
+                            </>
+                        )}
                     </div>
-                    )}
+                )}
             </div>
         </div>
     );

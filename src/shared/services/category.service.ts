@@ -1,9 +1,9 @@
 import type { CategoryResponse } from '../interfaces/category.interface';
-import { API_URL, getAuthHeaders } from './api';
+import { API_URL, apiFetch, getAuthHeaders } from './api';
 
 export async function getAllCategories(): Promise<CategoryResponse[]> {
     try {
-        const response = await fetch(`${API_URL}/category`, {
+        const response = await apiFetch(`${API_URL}/category`, {
             method: 'GET',
             headers: getAuthHeaders(),
         });
@@ -16,7 +16,7 @@ export async function getAllCategories(): Promise<CategoryResponse[]> {
 
 export async function getCategoryByIdentifier(identifier: string): Promise<CategoryResponse> {
     try {
-        const response = await fetch(`${API_URL}/category/${identifier}`, {
+        const response = await apiFetch(`${API_URL}/category/${identifier}`, {
             method: 'GET',
             headers: getAuthHeaders(),
         });
@@ -29,7 +29,7 @@ export async function getCategoryByIdentifier(identifier: string): Promise<Categ
 
 export async function createCategory(data: { name: string }): Promise<CategoryResponse> {
     try {
-        const response = await fetch(`${API_URL}/category`, {
+        const response = await apiFetch(`${API_URL}/category`, {
             method: 'POST',
             headers: getAuthHeaders(),
             body: JSON.stringify(data),

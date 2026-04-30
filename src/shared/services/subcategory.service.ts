@@ -1,9 +1,9 @@
 import type { SubCategoryResponse } from '../interfaces/subcategory.interface';
-import { API_URL, getAuthHeaders } from './api';
+import { API_URL, apiFetch, getAuthHeaders } from './api';
 
 export async function getSubCategoriesByCategory(categoryIdentifier: string): Promise<SubCategoryResponse[]> {
     try {
-        const response = await fetch(`${API_URL}/category/${categoryIdentifier}/subcategory`, {
+        const response = await apiFetch(`${API_URL}/category/${categoryIdentifier}/subcategory`, {
             method: 'GET',
             headers: getAuthHeaders(),
         });
@@ -20,7 +20,7 @@ export async function createSubCategory(data: {
     category_identifier: string;
 }): Promise<SubCategoryResponse> {
     try {
-        const response = await fetch(`${API_URL}/category/${data.category_identifier}/subcategory`, {
+        const response = await apiFetch(`${API_URL}/category/${data.category_identifier}/subcategory`, {
             method: 'POST',
             headers: getAuthHeaders(),
             body: JSON.stringify({ name: data.name }),

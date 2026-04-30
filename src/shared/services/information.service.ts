@@ -1,9 +1,9 @@
 import type { InformationViewResponse, InformationCreateDto } from '../interfaces/information.interface';
-import { API_URL, getAuthHeaders } from './api';
+import { API_URL, apiFetch, getAuthHeaders, getAuthHeadersMultipart } from './api';
 
 export async function getAllInformation(): Promise<InformationViewResponse[]> {
     try {
-        const response = await fetch(`${API_URL}/information`, {
+        const response = await apiFetch(`${API_URL}/information`, {
             method: 'GET',
             headers: getAuthHeaders(),
         });
@@ -16,7 +16,7 @@ export async function getAllInformation(): Promise<InformationViewResponse[]> {
 
 export async function getInformationByCategory(categoryIdentifier: string): Promise<InformationViewResponse[]> {
     try {
-        const response = await fetch(`${API_URL}/information?categoryIdentifier=${categoryIdentifier}`, {
+        const response = await apiFetch(`${API_URL}/information?categoryIdentifier=${categoryIdentifier}`, {
             method: 'GET',
             headers: getAuthHeaders(),
         });
@@ -29,7 +29,7 @@ export async function getInformationByCategory(categoryIdentifier: string): Prom
 
 export async function getInformationBySubCategory(subCategoryIdentifier: string): Promise<InformationViewResponse[]> {
     try {
-        const response = await fetch(`${API_URL}/information?subCategoryIdentifier=${subCategoryIdentifier}`, {
+        const response = await apiFetch(`${API_URL}/information?subCategoryIdentifier=${subCategoryIdentifier}`, {
             method: 'GET',
             headers: getAuthHeaders(),
         });
@@ -42,7 +42,7 @@ export async function getInformationBySubCategory(subCategoryIdentifier: string)
 
 export async function getInformationById(identifier: string): Promise<InformationViewResponse> {
     try {
-        const response = await fetch(`${API_URL}/information/${identifier}`, {
+        const response = await apiFetch(`${API_URL}/information/${identifier}`, {
             method: 'GET',
             headers: getAuthHeaders(),
         });
@@ -55,7 +55,7 @@ export async function getInformationById(identifier: string): Promise<Informatio
 
 export async function getInformationBySlug(slug: string): Promise<InformationViewResponse> {
     try {
-        const response = await fetch(`${API_URL}/information/slug/${slug}`, {
+        const response = await apiFetch(`${API_URL}/information/slug/${slug}`, {
             method: 'GET',
             headers: getAuthHeaders(),
         });
@@ -66,12 +66,19 @@ export async function getInformationBySlug(slug: string): Promise<InformationVie
     }
 }
 
-export async function createInformation(data: InformationCreateDto): Promise<InformationViewResponse> {
+export async function createInformation(data: InformationCreateDto, file?: File): Promise<InformationViewResponse> {
     try {
-        const response = await fetch(`${API_URL}/information`, {
+        const formData = new FormData();
+        formData.append('question', data.question);
+        formData.append('content', data.content);
+        formData.append('category_identifier', data.category_identifier);
+        formData.append('sub_category_identifier', data.sub_category_identifier);
+        if (file) formData.append('file', file);
+
+        const response = await apiFetch(`${API_URL}/information`, {
             method: 'POST',
-            headers: getAuthHeaders(),
-            body: JSON.stringify(data),
+            headers: getAuthHeadersMultipart(),
+            body: formData,
         });
         if (!response.ok) throw new Error('Erro ao criar informação');
         return await response.json();

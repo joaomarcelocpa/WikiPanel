@@ -1,5 +1,6 @@
-import { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
+import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from 'react';
 import { loginApi } from '../services/auth.service';
+import { setUnauthorizedHandler } from '../services/api';
 import type { UserInfo } from '../interfaces/user.interface';
 
 interface AuthContextType {
@@ -33,6 +34,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setToken(null);
         setUser(null);
     }, []);
+
+    useEffect(() => {
+        setUnauthorizedHandler(logout);
+    }, [logout]);
 
     return (
         <AuthContext.Provider value={{ user, token, isAuthenticated: !!token, login, logout }}>

@@ -56,6 +56,7 @@ export default function AdminPage({ darkMode }: AdminPageProps) {
     const [infoContent, setInfoContent] = useState('');
     const [infoCatId, setInfoCatId] = useState('');
     const [infoSubCatId, setInfoSubCatId] = useState('');
+    const [infoFile, setInfoFile] = useState<File | null>(null);
 
     // User management
     const [users, setUsers] = useState<UserResponse[]>([]);
@@ -116,7 +117,10 @@ export default function AdminPage({ darkMode }: AdminPageProps) {
     const handleCreateInformation = async (e: React.FormEvent) => {
         e.preventDefault(); setLoading(true);
         try {
-            await createInformation({ question: infoQuestion, content: infoContent, category_identifier: infoCatId, sub_category_identifier: infoSubCatId });
+            await createInformation(
+                { question: infoQuestion, content: infoContent, category_identifier: infoCatId, sub_category_identifier: infoSubCatId },
+                infoFile ?? undefined,
+            );
             reloadAfterSuccess('Informação criada!');
         } catch (err) { showToast('error', err instanceof Error ? err.message : 'Erro'); setLoading(false); }
     };
@@ -294,6 +298,34 @@ export default function AdminPage({ darkMode }: AdminPageProps) {
                             <label className={labelClass}>Conteúdo / Resposta *</label>
                             <textarea value={infoContent} onChange={e => setInfoContent(e.target.value)} required placeholder="Escreva a resposta completa aqui. Suporta HTML." rows={8} className={`${inputClass} resize-none font-mono text-xs`} />
                             <p className={`text-xs mt-1 ${darkMode ? 'text-gray-600' : 'text-gray-400'}`}>Suporta HTML para formatação avançada.</p>
+                        </div>
+                        <div>
+                            <label className={labelClass}>Imagem <span className={`normal-case font-normal ${darkMode ? 'text-gray-600' : 'text-gray-400'}`}>(opcional)</span></label>
+                            <label className={`flex items-center gap-3 px-4 py-3 rounded-lg border cursor-pointer transition-all ${
+                                infoFile
+                                    ? darkMode ? 'border-[#3fbec5] bg-[#3fbec5]/10' : 'border-[#3fbec5] bg-[#3fbec5]/5'
+                                    : darkMode ? 'border-gray-700 hover:border-gray-600 bg-[#0f0f0f]' : 'border-gray-200 hover:border-gray-300 bg-white'
+                            }`}>
+                                <input
+                                    type="file"
+                                    accept="image/jpeg,image/png,image/webp,image/gif"
+                                    className="hidden"
+                                    onChange={e => setInfoFile(e.target.files?.[0] ?? null)}
+                                />
+                                <svg className={`w-5 h-5 shrink-0 ${infoFile ? 'text-[#3fbec5]' : darkMode ? 'text-gray-500' : 'text-gray-400'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                                <span className={`text-sm truncate ${infoFile ? 'text-[#3fbec5] font-medium' : darkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+                                    {infoFile ? infoFile.name : 'Clique para selecionar uma imagem...'}
+                                </span>
+                                {infoFile && (
+                                    <button type="button" onClick={e => { e.preventDefault(); setInfoFile(null); }}
+                                        className={`ml-auto shrink-0 text-xs px-2 py-0.5 rounded ${darkMode ? 'text-gray-400 hover:text-red-400' : 'text-gray-400 hover:text-red-500'}`}>
+                                        remover
+                                    </button>
+                                )}
+                            </label>
+                            <p className={`text-xs mt-1 ${darkMode ? 'text-gray-600' : 'text-gray-400'}`}>JPG, PNG, WEBP ou GIF · máx. 10MB</p>
                         </div>
                         <button type="submit" disabled={loading || !infoQuestion.trim() || !infoContent.trim() || !infoCatId || !infoSubCatId} className="w-full py-3 rounded-xl bg-[#155457] hover:bg-[#268c90] text-white text-sm font-bold tracking-wide transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
                             <FileText className="w-4 h-4" />{loading ? 'Criando...' : 'Criar Informação'}

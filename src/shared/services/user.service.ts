@@ -1,9 +1,9 @@
 import type { UserResponse } from '../interfaces/user.interface';
-import { API_URL, getAuthHeaders } from './api';
+import { API_URL, apiFetch, getAuthHeaders } from './api';
 
 export async function getAllUsers(): Promise<UserResponse[]> {
     try {
-        const response = await fetch(`${API_URL}/users`, {
+        const response = await apiFetch(`${API_URL}/users`, {
             method: 'GET',
             headers: getAuthHeaders(),
         });
@@ -21,7 +21,7 @@ export async function createUser(data: {
     type: string;
 }): Promise<UserResponse> {
     try {
-        const response = await fetch(`${API_URL}/users`, {
+        const response = await apiFetch(`${API_URL}/users`, {
             method: 'POST',
             headers: getAuthHeaders(),
             body: JSON.stringify(data),
@@ -38,7 +38,7 @@ export async function updateUser(
     data: { name?: string; email?: string; password?: string; type?: string },
 ): Promise<UserResponse> {
     try {
-        const response = await fetch(`${API_URL}/users/${id}`, {
+        const response = await apiFetch(`${API_URL}/users/${id}`, {
             method: 'PATCH',
             headers: getAuthHeaders(),
             body: JSON.stringify(data),
@@ -52,7 +52,7 @@ export async function updateUser(
 
 export async function deleteUser(id: string): Promise<void> {
     try {
-        const response = await fetch(`${API_URL}/users/${id}`, {
+        const response = await apiFetch(`${API_URL}/users/${id}`, {
             method: 'DELETE',
             headers: getAuthHeaders(),
         });
